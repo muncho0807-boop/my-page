@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>쑥떡 (SSUKDDEOK) 프로필</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for winning quiz effect -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&family=Orbitron:wght@800;900&display=swap');
+
+        :root {
+            --ow-orange: #f99e1a;
+            --ow-blue: #00a8e8;
+            --cute-green: #88c999;
+            --cute-bg: #f8faf6;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--cute-bg);
+            color: #334155;
+            overflow-x: hidden;
+        }
+
+        .font-jua {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* 귀여운 둥글둥글 카드 + 오버워치 포인트 선 */
+        .cute-card {
+            background: #ffffff;
+            border: 3px solid #e2e8f0;
+            border-bottom: 6px solid #cbd5e1;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .cute-card:hover {
+            border-color: var(--ow-orange);
+        }
+
+        /* 오버워치 감성 포인트 스타일 버튼 */
+        .ow-cute-btn {
+            background: linear-gradient(135deg, #f99e1a 0%, #ff7e00 100%);
+            color: white;
+            font-family: 'Jua', sans-serif;
+            border-radius: 9999px;
+            box-shadow: 0 6px 0px #c25e00;
+            transition: all 0.15s ease;
+        }
+
+        .ow-cute-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0px #c25e00;
+        }
+
+        /* 통통 튀는 애니메이션 (Bouncing text) */
+        .bounce-text span {
+            display: inline-block;
+            animation: owBounce 1.2s infinite ease-in-out;
+            color: #475569;
+        }
+
+        .bounce-text span:nth-child(1) { 
+            animation-delay: 0.0s; 
+            color: #10b981; /* 쑥색/초록 */
+        }
+        .bounce-text span:nth-child(2) { 
+            animation-delay: 0.2s; 
+            color: var(--ow-orange); /* 오버워치 오렌지 */
+        }
+
+        @keyframes owBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-16px) scale(1.1); }
+        }
+
+        /* 3D Card Flip Effect */
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+            height: 260px;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+
+        .flip-card-front {
+            background: #ffffff;
+            border: 3px solid #e2e8f0;
+            border-bottom: 5px solid #cbd5e1;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, #00a8e8 0%, #0077b6 100%);
+            color: white;
+            transform: rotateY(180deg);
+            box-shadow: 0 10px 20px rgba(0, 168, 232, 0.3);
+        }
+
+        /* Canvas Particle Trail */
+        #sparkleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between relative selection:bg-orange-300">
+
+    <!-- 마우스 트래킹 반짝이 캔버스 -->
+    <canvas id="sparkleCanvas"></canvas>
+
+    <!-- Background Cute Decors -->
+    <div class="fixed top-10 left-5 text-4xl opacity-20 pointer-events-none select-none">🍮</div>
+    <div class="fixed bottom-10 right-5 text-4xl opacity-20 pointer-events-none select-none">🐰</div>
+
+    <!-- Header Section -->
+    <header class="w-full max-w-4xl p-6 text-center mt-4 z-10">
+        <!-- 오버워치 스타일 뱃지 -->
+        <div class="inline-flex items-center gap-2 bg-orange-100 text-orange-600 px-4 py-1.5 rounded-full border border-orange-300 mb-3 shadow-sm font-jua">
+            <i class="fa-solid fa-shield-halved text-orange-500"></i>
+            <span class="text-xs font-orbitron tracking-wider">OVERWATCH HERO PROFILE</span>
+        </div>
+        
+        <!-- 수정된 제목: '영웅'을 제외한 '쑥떡' -->
+        <h1 class="text-5xl sm:text-7xl font-black font-jua tracking-wider mb-2">
+            <span class="bounce-text"><span>쑥</span><span>떡</span></span>
+        </h1>
+        <p class="text-slate-500 text-sm sm:text-base font-jua">
+            ✨ 말랑말랑 쑥떡이의 프로필 페이지에 온 걸 환영해! ✨
+        </p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="w-full max-w-4xl px-4 py-2 flex flex-col gap-8 z-10 mb-12">
+
+        <!-- 오버워치 캐릭터 바: 포인트 디스플레이 -->
+        <div class="bg-gradient-to-r from-orange-400 via-amber-400 to-sky-400 p-1 rounded-3xl shadow-md">
+            <div class="bg-white rounded-[22px] px-6 py-4 flex flex-wrap items-center justify-around gap-4 text-xs sm:text-sm font-jua text-slate-700">
+                <div class="flex items-center gap-2">
+                    <span class="bg-pink-100 text-pink-600 px-2.5 py-1 rounded-full border border-pink-300">D.Va 🐰</span>
+                    <span>우사기 최고!</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="bg-orange-100 text-orange-600 px-2.5 py-1 rounded-full border border-orange-300">Tracer ⚡</span>
+                    <span>궁극기 준비완료</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="bg-emerald-100 text-emerald-600 px-2.5 py-1 rounded-full border border-emerald-300">Lúcio 🎧</span>
+                    <span>우유푸딩 힐링팩</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 1: 좋아하는 것 3가지 (Flip Cards) -->
+        <section class="cute-card p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-2xl font-black font-jua text-orange-500 flex items-center gap-2">
+                    <i class="fa-solid fa-heart text-pink-500"></i> 내가 좋아하는 것 3가지
+                </h2>
+                <span class="bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full border border-orange-200">
+                    <i class="fa-solid fa-hand-pointer mr-1"></i>카드를 터치해봐!
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                
+                <!-- Card 1: 게임 -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-16 h-16 rounded-full bg-orange-100 flex items-center justify-center text-orange-500 text-3xl mb-3 border-2 border-orange-200">
+                                <i class="fa-solid fa-gamepad"></i>
+                            </div>
+                            <h3 class="text-xl font-bold font-jua text-slate-800">게임</h3>
+                            <span class="text-xs text-orange-400 font-bold mt-2">CLICK ME!</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4 class="text-lg font-bold font-jua text-amber-200 mb-2">🔥 POTG 주역</h4>
+                            <p class="text-xs sm:text-sm text-white leading-relaxed">
+                                궁극기 켜졌을 때의 짜릿함! 팟지(POTG) 먹고 화면에 내 닉네임 뜰 때 인생 최상의 쾌감을 느껴요! 🎮⚡
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: 우유 푸딩 -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-16 h-16 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 text-3xl mb-3 border-2 border-yellow-200">
+                                <i class="fa-solid fa-cookie-bite"></i>
+                            </div>
+                            <h3 class="text-xl font-bold font-jua text-slate-800">우유 푸딩</h3>
+                            <span class="text-xs text-orange-400 font-bold mt-2">CLICK ME!</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4 class="text-lg font-bold font-jua text-amber-200 mb-2">🍮 체력 회복 팩</h4>
+                            <p class="text-xs sm:text-sm text-white leading-relaxed">
+                                말랑말랑~ 달콤 부드러운 우유 푸딩 한 입이면 데스(Death)의 빡침도 사르르 녹아내리는 극강의 힐링템! ✨
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: 우사기 -->
+                <div class="flip-card" onclick="this.classList.toggle('flipped')">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="w-16 h-16 rounded-full bg-pink-100 flex items-center justify-center text-pink-500 text-3xl mb-3 border-2 border-pink-200">
+                                <i class="fa-solid fa-ghost"></i>
+                            </div>
+                            <h3 class="text-xl font-bold font-jua text-slate-800">우사기</h3>
+                            <span class="text-xs text-orange-400 font-bold mt-2">CLICK ME!</span>
+                        </div>
+                        <div class="flip-card-back">
+                            <h4 class="text-lg font-bold font-jua text-amber-200 mb-2">🐰 우라? 야하!!</h4>
+                            <p class="text-xs sm:text-sm text-white leading-relaxed">
+                                "우라! 야하! 푸르르르!" 미친듯한 귀여움과 미친 존재감! 우사기를 보면 세상을 다 얻은 기분이에요! 💕
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: OX 퀴즈 -->
+        <section class="cute-card p-6 sm:p-8 text-center relative overflow-hidden">
+            <!-- 오버워치 뱃지 디테일 -->
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-sky-500 text-white text-xs font-black font-orbitron px-4 py-1 rounded-full shadow">
+                QUIZ MISSION
+            </div>
+
+            <h2 class="text-2xl font-black font-jua text-sky-500 mt-2 mb-2">
+                <i class="fa-solid fa-circle-question"></i> 쑥떡 퀴즈 타임!
+            </h2>
+            <p class="text-lg sm:text-xl mb-6 font-bold font-jua text-slate-700">
+                Q. "쑥떡이는 <span class="text-orange-500 bg-orange-100 px-2 py-0.5 rounded-lg border border-orange-300">문시중</span> 출신이다?"
+            </p>
+
+            <div class="flex justify-center gap-6 mb-2">
+                <button onclick="checkQuiz('O')" class="w-24 h-16 text-3xl font-black font-jua text-white bg-rose-500 hover:bg-rose-600 rounded-2xl shadow-[0_5px_0_#be123c] active:translate-y-1 active:shadow-none transition">
+                    O
+                </button>
+                <button onclick="checkQuiz('X')" class="w-24 h-16 text-3xl font-black font-jua text-white bg-sky-500 hover:bg-sky-600 rounded-2xl shadow-[0_5px_0_#0369a1] active:translate-y-1 active:shadow-none transition">
+                    X
+                </button>
+            </div>
+
+            <!-- Quiz Result Alert Box -->
+            <div id="quizResult" class="hidden mt-6 p-4 rounded-2xl font-bold font-jua text-sm sm:text-base transition-all"></div>
+        </section>
+
+        <!-- SECTION 3: 오늘의 운세 Generator -->
+        <section class="cute-card p-6 sm:p-8 text-center">
+            <h2 class="text-2xl font-black font-jua text-orange-500 mb-2">
+                <i class="fa-solid fa-clover text-emerald-500"></i> 오늘의 쑥떡 운세
+            </h2>
+            <p class="text-slate-500 text-sm font-jua mb-6">버튼을 눌러 오늘 어떤 행운이 기다리고 있는지 확인해봐!</p>
+
+            <div id="fortuneDisplay" class="bg-amber-50/60 border-2 border-dashed border-amber-300 p-6 rounded-2xl min-h-[100px] flex items-center justify-center mb-6">
+                <p class="text-amber-800/60 font-jua text-base">"아래 버튼을 눌러 뽑아보세요!"</p>
+            </div>
+
+            <button onclick="getFortune()" class="ow-cute-btn px-8 py-3 text-xl tracking-wider">
+                <i class="fa-solid fa-dice mr-2"></i>운세 뽑기!
+            </button>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-6 border-t border-slate-200 text-xs text-slate-400 font-jua bg-white">
+        © 2026 쑥떡 (SSUKDDEOK) PAGE | OVERWATCH STYLE PROFILE
+    </footer>
+
+    <!-- JavaScript code -->
+    <script>
+        /* ----------------------------------------------------
+           1. OX Quiz Logic & Effects
+        ---------------------------------------------------- */
+        function checkQuiz(userAnswer) {
+            const resultBox = document.getElementById('quizResult');
+            resultBox.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'border-emerald-300', 'bg-rose-100', 'text-rose-800', 'border-rose-300');
+
+            if (userAnswer === 'X') {
+                // 정답!
+                resultBox.classList.add('bg-emerald-100', 'text-emerald-800', 'border-2', 'border-emerald-300');
+                resultBox.innerHTML = "🎉 정답! 문시중 출신이 아니랍니다! 쑥떡이에 대해 좀 아시는군요? (최고의 플레이 승리!)";
+                
+                // 폭죽 축하 효과 (Confetti)
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            } else {
+                // 오답!
+                resultBox.classList.add('bg-rose-100', 'text-rose-800', 'border-2', 'border-rose-300');
+                resultBox.innerHTML = "💀 땡-! 아쉽지만 오답이에요! 문시중 출신이 아닙니다~ 푹 쉬고 다시 도전하세요!";
+                
+                // 화면 살짝 흔들기 효과
+                document.body.classList.add('translate-x-1');
+                setTimeout(() => document.body.classList.remove('translate-x-1'), 100);
+            }
+        }
+
+        /* ----------------------------------------------------
+           2. Today's Fortune (10+ Randomized fortunes)
+        ---------------------------------------------------- */
+        const fortunes = [
+            "🎯 [POTG 각] 오늘 플레이하는 모든 게임에서 최고의 플레이를 싹쓸이할 운세입니다!",
+            "🍮 [푸딩의 축복] 맛있는 디저트를 먹으면 오늘 하루의 스트레스가 200% 해소됩니다.",
+            "🐰 [우사기 파워] '야하!' 소리와 함께 뜻밖의 대박 행운이 찾아옵니다!",
+            "⚡ [궁극기 100%] 준비는 끝났습니다. 망설이지 말고 하고 싶었던 일을 저지르세요!",
+            "🛡️ [팀운 대폭발] 오늘 만나는 모든 사람들이 당신을 도울 든든한 탱힐이 되어줍니다.",
+            "🎁 [뜻밖의 전리품] 전리품 상자에서 전설 스킨이 나오듯, 소소하고 기분 좋은 선물이 찾아옵니다.",
+            "💤 [휴식 타임] 오늘 밤은 폭신한 침대에서 최상의 힐링을 완료해야 내일이 대박 납니다.",
+            "🚀 [고속 이동] 오늘 할 일은 트레이서 쩜오 점프처럼 순식간에 끝납니다!",
+            "🔥 [연승 행진] 기세가 하늘을 찌릅니다. 도전하고 싶었던 것에 바로 돌진해보세요!",
+            "☕ [달콤함 충전] 달콤한 우유 푸딩이나 시원한 음료를 챙겨 마시면 뇌 회전력이 급상승합니다.",
+            "✨ [올라운더] 오늘은 뭘 해도 찰떡처럼 착착 들어맞는 완벽한 하루가 될 거예요!"
+        ];
+
+        let lastFortuneIndex = -1;
+
+        function getFortune() {
+            const display = document.getElementById('fortuneDisplay');
+            
+            // 버튼 클릭 시 로딩 애니메이션 
+            display.innerHTML = '<p class="text-orange-500 font-bold font-jua animate-bounce">운세 분석 중... 🔮</p>';
+
+            setTimeout(() => {
+                let randomIndex;
+                do {
+                    randomIndex = Math.floor(Math.random() * fortunes.length);
+                } while (randomIndex === lastFortuneIndex); // 이전과 동일한 운세 방지
+                
+                lastFortuneIndex = randomIndex;
+                display.innerHTML = `<p class="text-base sm:text-lg font-bold font-jua text-amber-900 leading-relaxed">${fortunes[randomIndex]}</p>`;
+            }, 300);
+        }
+
+        /* ----------------------------------------------------
+           3. Mouse Sparkling Trail Particle Effect (Cute Bright Color)
+        ---------------------------------------------------- */
+        const canvas = document.getElementById('sparkleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 6 + 2;
+                this.speedX = (Math.random() - 0.5) * 2.5;
+                this.speedY = (Math.random() - 0.5) * 2.5;
+                // 화사하고 귀여운 오버워치 컬러 파티클 (오렌지, 파랑, 민트, 핑크)
+                const colors = ['#f99e1a', '#00a8e8', '#10b981', '#ec4899', '#fbbf24'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.life = 1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.life -= 0.03;
+                if (this.size > 0.2) this.size -= 0.08;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.life);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function createParticles(e) {
+            const x = e.clientX || (e.touches && e.touches[0].clientX);
+            const y = e.clientY || (e.touches && e.touches[0].clientY);
+
+            if (x && y) {
+                for (let i = 0; i < 3; i++) {
+                    particles.push(new Particle(x, y));
+                }
+            }
+        }
+
+        window.addEventListener('mousemove', createParticles);
+        window.addEventListener('touchmove', createParticles);
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                if (particles[i].life <= 0 || particles[i].size <= 0.2) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    </script>
+</body>
+</html>
